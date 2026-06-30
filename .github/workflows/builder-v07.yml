@@ -231,17 +231,19 @@ jobs:
                     fi
                     if [ -e "$DIR/super_raw.img" ] && [ "${{github.event.inputs.IS_SUPER_SPARSE}}" == 'true' ]; then
                         if [ "$(ls -nl $DIR/super_raw.img | awk '{print $5}')" -lt 100000 ]; then
+                            echo "Using super.img as converted super_raw.img seems corrupted"
                             rm -rf super_raw.img
                             lpdump $DIR/super.img > $ENVTEMP/super_map.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Size:" | awk '{print $2}' > $ENVTEMP/super_size.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Maximum size:" | awk '{print $3}' | sed '2!d' > $ENVTEMP/super_main.txt
                             lpunpack $DIR/super.img $DIR/
                         else
+                            echo "Using converted super_raw.img"
                             rm -rf super.img
                             lpdump $DIR/super_raw.img > $ENVTEMP/super_map.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Size:" | awk '{print $2}' > $ENVTEMP/super_size.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Maximum size:" | awk '{print $3}' | sed '2!d' > $ENVTEMP/super_main.txt
-                            lpunpack $DIR/super.img $DIR/
+                            lpunpack $DIR/super_raw.img $DIR/
                         fi
                     else
                         lpdump $DIR/super.img > $ENVTEMP/super_map.txt
