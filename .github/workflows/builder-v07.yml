@@ -240,10 +240,11 @@ jobs:
                         else
                             echo "Using converted super_raw.img"
                             rm -rf super.img
-                            lpdump $DIR/super_raw.img > $ENVTEMP/super_map.txt
+                            mv super_raw.img super.img
+                            lpdump $DIR/super.img > $ENVTEMP/super_map.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Size:" | awk '{print $2}' > $ENVTEMP/super_size.txt
                             printf "$(<$ENVTEMP/super_map.txt)" | grep -e "Maximum size:" | awk '{print $3}' | sed '2!d' > $ENVTEMP/super_main.txt
-                            lpunpack $DIR/super_raw.img $DIR/
+                            lpunpack $DIR/super.img $DIR/
                         fi
                     else
                         lpdump $DIR/super.img > $ENVTEMP/super_map.txt
